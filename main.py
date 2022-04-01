@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, jsonify
 from turbojson import t_jsonify
 import string
 import json
@@ -14,20 +14,20 @@ canvas = {}
 
 @app.route('/getall/count')
 def get_tile_count():
-    return t_jsonify(len(canvas))
+    return jsonify(len(canvas))
 
 
 @app.route('/getall')
 def get_canvas():
     print('Download all requested')
     r = t_jsonify(canvas)
-    r.headers['Content-Length'] = len(json.dumps(canvas)) + 1
+    r.headers['Access-Control-Allow-Origin'] = '*'
     return r
 
 
 @app.route('/getall/version')
 def get_version():
-    r = t_jsonify(version)
+    r = jsonify(version)
     return r
 
 
@@ -42,6 +42,7 @@ def generate_blank_canvas(w, h):
                 print('\b' * 51, end='', flush=True)
                 print(f'Generate blank frame: {done}/{total} {round(done / total * 100, 2)}%'.ljust(50), end='',
                       flush=True)
+            
             built[f'{x},{y}'] = (255, 255, 255)
     print('...done')
     return built
@@ -65,7 +66,7 @@ def reinit():
             if request.form['code'] != code:
                 return render_template('re_init.html', status='fail')
             else:
-                blank = generate_blank_canvas(1000, 1000)
+                blank = generate_blank_canvas(100, 100)
                 canvas_frames = []
                 canvas_frames.append(blank)
                 canvas = blank
@@ -80,4 +81,4 @@ def root():
     return render_template('index.html')
 
 
-app.run(host='0.0.0.0', port=8080, debug=True)
+app.run(host='0.0.0.0', port=8080, debug=False)

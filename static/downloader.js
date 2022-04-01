@@ -9,23 +9,25 @@ async function get_server_version() {
 
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
 
-function progress({loaded, total}) {
-  debug_el.innerHTML = Math.round(loaded/total*100)+'%';
-}
-
 async function download_all() {
-    debug_el.innerHTML = 'Waiting for server...';
-    let response = await fetch('/getall');
-    debug_el.innerHTML = 'Recieving data...';
-    response = await response.json();
-
-    debug_el.innerHTML = 'Done.';
-    frame_data.canvas = response;
+    try {
+        load_text('Loading data...');
+        debug_el.innerHTML = 'waiting';
+        let response;
+        response = await (fetch('/getall').then(r => r.json()));
+        load_text('Done.');
+        frame_data.canvas = response;
+    } catch (e) {
+        alert(e.name)
+        alert(e.message)
+    }
+    populate();
 }
 let debug_el;
 
 function test_version() {
     debug_el = document.getElementById('debug');
+    // fetch('/getall').then(r=>r.json()).then(j => {debug_el?.innerHTML = j+''}).catch(alert)
     download_all().then(() => {
         count = Object.keys(frame_data.canvas).length;
         debug_el.innerHTML = `Total count: ${count}`;
