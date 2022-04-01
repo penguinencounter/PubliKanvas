@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        
+    </head>
+    <body>
+        {%if status == 'ask'%}
+        <form name="confimation" method="post">
+            <input type="password" placeholder="Type here" name="code"><input type="submit" value="RESET IT!" name="ok">
+        </form>
+        {%elif status == 'done'%}
+        Done!
+        {%elif status == 'fail'%}
+        Failed.
+        {%endif%}
+    </body>
+</html>
