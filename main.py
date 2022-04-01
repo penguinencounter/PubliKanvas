@@ -3,6 +3,7 @@ from turbojson import t_jsonify
 import string
 import json
 import random
+
 app = Flask('app')
 
 canvas_frames = [
@@ -10,15 +11,20 @@ canvas_frames = [
 version = 0
 canvas = {}
 
+
 @app.route('/getall/count')
 def get_tile_count():
     return t_jsonify(len(canvas))
+
+
 @app.route('/getall')
 def get_canvas():
     print('Download all requested')
     r = t_jsonify(canvas)
-    r.headers['Content-Length'] = len(json.dumps(canvas))+1
+    r.headers['Content-Length'] = len(json.dumps(canvas)) + 1
     return r
+
+
 @app.route('/getall/version')
 def get_version():
     r = t_jsonify(version)
@@ -33,14 +39,17 @@ def generate_blank_canvas(w, h):
         for y in range(h):
             done += 1
             if done % 1000 == 0:
-                print('\b'*51, end='', flush=True)
-                print(f'Generate blank frame: {done}/{total} {round(done/total*100, 2)}%'.ljust(50), end='', flush=True)
+                print('\b' * 51, end='', flush=True)
+                print(f'Generate blank frame: {done}/{total} {round(done / total * 100, 2)}%'.ljust(50), end='',
+                      flush=True)
             built[f'{x},{y}'] = (255, 255, 255)
     print('...done')
     return built
 
 
 code = ''
+
+
 @app.route('/reinit', methods=('GET', 'POST'))
 def reinit():
     global code, canvas_frames, canvas, version
@@ -65,8 +74,10 @@ def reinit():
         except KeyError:
             return render_template('re_init.html', status='fail')
 
+
 @app.route('/')
 def root():
     return render_template('index.html')
 
-app.run(host='0.0.0.0', port=8080)
+
+app.run(host='0.0.0.0', port=8080, debug=True)
