@@ -1,4 +1,5 @@
-from flask import Flask, jsonify, request, render_template
+from flask import Flask, request, render_template
+from turbojson import t_jsonify
 import string
 import json
 import random
@@ -11,16 +12,16 @@ canvas = {}
 
 @app.route('/getall/count')
 def get_tile_count():
-    return jsonify(len(canvas))
+    return t_jsonify(len(canvas))
 @app.route('/getall')
 def get_canvas():
     print('Download all requested')
-    r = jsonify(canvas)
+    r = t_jsonify(canvas)
     r.headers['Content-Length'] = len(json.dumps(canvas))+1
     return r
 @app.route('/getall/version')
 def get_version():
-    r = jsonify(version)
+    r = t_jsonify(version)
     return r
 
 

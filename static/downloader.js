@@ -17,7 +17,7 @@ async function download_all() {
     document.getElementById('debug').innerHTML = `Preparing data...`;
     let response = await fetch('/getall');
     document.getElementById('debug').innerHTML = `Recieving data...`;
-    let ndata = await response.json();
+    response = await response.json();
     document.getElementById('debug').innerHTML = `Done.`;
     frame_data.canvas = ndata;
 }
